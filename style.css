@@ -1,1 +1,77 @@
+/* พื้นหลังคริสต์มาส */
+body {
+    font-family: 'Arial', sans-serif;
+    background-image: url('https://example.com/christmas-background.jpg'); /* ใส่ URL ของภาพพื้นหลังคริสต์มาส */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+}
 
+/* กล่องข้อความหลัก */
+.container {
+    text-align: center;
+    padding: 40px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.7); /* ทำให้พื้นหลังโปร่งใส */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+}
+
+/* ข้อความหัวเรื่อง */
+h1 {
+    font-size: 48px;
+    color: #ff6347; /* สีแดงสด */
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* ปุ่มสุ่ม */
+button {
+    background-color: #ff4500; /* สีแดงสด */
+    color: white;
+    padding: 18px 36px;
+    font-size: 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    background-color: #ff6347;
+    transform: scale(1.1); /* ขยายขนาดปุ่มเมื่อ hover */
+}
+
+/* ข้อความผลลัพธ์ */
+#result {
+    margin-top: 30px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #006400; /* สีเขียวคริสต์มาส */
+    line-height: 1.5;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#result br {
+    margin-bottom: 10px;
+}
+
+/* สไตล์หิมะ */
+#snow-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 0;
+}
