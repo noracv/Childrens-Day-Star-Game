@@ -4,7 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>สุ่มเลขสำหรับ 28 คน</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* พื้นหลังและการตกแต่ง */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://example.com/christmas-background.jpg'); /* ใส่ URL ของภาพพื้นหลังคริสต์มาส */
+            background-size: cover;
+            background-position: center;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+
+        /* ปรับพื้นที่การแสดงผล */
+        .container {
+            text-align: center;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.7); /* ทำให้พื้นหลังโปร่งใส */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ข้อความหัวเรื่อง */
+        h1 {
+            font-size: 36px;
+            color: #ff4500; /* สีแดงคริสต์มาส */
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin-bottom: 20px;
+        }
+
+        /* ปุ่มสุ่ม */
+        button {
+            background-color: #ff6347; /* สีแดงสด */
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ff4500; /* เปลี่ยนสีเมื่อเลื่อนเมาส์ไปบนปุ่ม */
+        }
+
+        /* ข้อความผลลัพธ์ */
+        #result {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #006400; /* สีเขียวคริสต์มาส */
+            line-height: 1.5;
+        }
+
+        #result br {
+            margin-bottom: 10px;
+        }
+
+        /* สไตล์หิมะ */
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -12,6 +84,92 @@
         <button onclick="generateNumbers()">สุ่มเลข</button>
         <div id="result"></div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- Canvas สำหรับหิมะ -->
+    <canvas id="snow-canvas"></canvas>
+
+    <script>
+        // สร้างหิมะตก
+        const snowflakes = [];
+        const numberOfSnowflakes = 100;  // จำนวนหิมะที่ตก
+
+        class Snowflake {
+            constructor() {
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight;
+                this.size = Math.random() * 5 + 2; // ขนาดหิมะ
+                this.speed = Math.random() * 3 + 1; // ความเร็วในการตก
+                this.opacity = Math.random() * 0.5 + 0.5; // ความโปร่งใสของหิมะ
+            }
+
+            update() {
+                this.y += this.speed;
+                if (this.y > window.innerHeight) {
+                    this.y = -this.size;
+                    this.x = Math.random() * window.innerWidth;
+                }
+            }
+
+            draw(context) {
+                context.beginPath();
+                context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                context.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                context.fill();
+            }
+        }
+
+        function createSnowflakes() {
+            for (let i = 0; i < numberOfSnowflakes; i++) {
+                snowflakes.push(new Snowflake());
+            }
+        }
+
+        function updateSnowflakes() {
+            const canvas = document.getElementById('snow-canvas');
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            snowflakes.forEach(snowflake => {
+                snowflake.update();
+                snowflake.draw(context);
+            });
+
+            requestAnimationFrame(updateSnowflakes);
+        }
+
+        // เริ่มต้นการสร้างหิมะ
+        window.onload = () => {
+            const canvas = document.getElementById('snow-canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            createSnowflakes();
+            updateSnowflakes();
+        };
+
+        // การสุ่มเลข
+        let availableNumbers = Array.from({ length: 28 }, (_, i) => i + 1);  // สร้างอาร์เรย์เลข 1 ถึง 28
+
+        const generateNumbers = () => {
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "";  // Clear previous result
+
+            if (availableNumbers.length === 0) {
+                resultDiv.innerHTML = "หมดเลขที่สามารถสุ่มได้แล้ว!";
+                return;
+            }
+
+            let resultText = "";
+            // สุ่มเลขให้กับแต่ละคน
+            for (let i = 1; i <= 28; i++) {
+                const randomIndex = Math.floor(Math.random() * availableNumbers.length);  // สุ่มเลขจากรายการที่เหลือ
+                const randomNumber = availableNumbers[randomIndex];  // เลือกเลขที่สุ่ม
+                resultText += `ผู้ที่ ${i} ได้รับเลข: ${randomNumber}<br>`;
+                availableNumbers.splice(randomIndex, 1);  // ลบเลขที่สุ่มออกจากรายการ
+            }
+
+            resultDiv.innerHTML = resultText;
+        };
+    </script>
 </body>
 </html>
